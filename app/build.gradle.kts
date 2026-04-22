@@ -61,7 +61,8 @@ dependencies {
     // LIBRERIA PARA LA NAVEGACION
     val nav_version = "2.9.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
-
     // LIBRERIA FIREBASE
     implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    // LIBREREIA AUTH
+    implementation(libs.firebase.auth)
 }
