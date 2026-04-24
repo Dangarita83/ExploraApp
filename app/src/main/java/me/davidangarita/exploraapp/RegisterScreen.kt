@@ -31,6 +31,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import me.davidangarita.exploraapp.ui.theme.ExploraAppTheme
 
 
@@ -46,6 +48,15 @@ fun RegisterScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var acceptedTerms by remember { mutableStateOf(false) }
+
+    var nameError by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf("") }
+    var passwordError by remember { mutableStateOf("") }
+    var passwordConfirmError by remember { mutableStateOf("") }
+
+
+    val auth = Firebase.auth
+
 
     val primaryOrange = Color(0xFFE45D25)
     val lightGrayBg = Color(0xFFF8F9FE)
@@ -179,7 +190,18 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { onRegisterSuccess() },
+                onClick = {
+
+                    onRegisterSuccess
+
+                    val isValidName = validateName(name).first
+                    val isValidEmail = validateEmail(email).first
+                    val isValidPassword = validatePassword(password).first
+                    val isValidConfirmPassword = validateConfirmPassword(confirmPassword).first
+
+
+
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp),
