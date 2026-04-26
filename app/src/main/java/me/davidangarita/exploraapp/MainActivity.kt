@@ -14,6 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import me.davidangarita.exploraapp.ui.theme.ExploraAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,10 +24,20 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val myNavController = rememberNavController()
+            var myStartDestination: String = "login"
+            val auth = Firebase.auth
+            val currentUser = auth.currentUser
+
+            if(currentUser != null){
+                myStartDestination = "home"
+
+            }else{
+                myStartDestination = "login"
+            }
 
             NavHost(
                 navController = myNavController,
-                startDestination = "Login",
+                startDestination = myStartDestination,
                 modifier = Modifier.fillMaxSize()
             ) {
                 composable(route = "login") {
@@ -40,14 +52,22 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 composable(route = "register") {
-                    RegisterScreen(onRegisterSuccess = {}, onNavigateToLogin = {}, onBackClick = {
+                    RegisterScreen(onRegisterSuccess = {
+                        myNavController.navigate("home"){
+                            popUpTo(0)
+                        }
+                    }, onNavigateToLogin = {}, onBackClick = {
                         myNavController.popBackStack()
                     }
                     )
                 }
 
                 composable(route = "home"){
-                    HomeScreen()
+                    HomeScreen(onClickLogout = {
+                        myNavController.navigate("login"){
+                            popUpTo(0)
+                        }
+                    })
                 }
 
 

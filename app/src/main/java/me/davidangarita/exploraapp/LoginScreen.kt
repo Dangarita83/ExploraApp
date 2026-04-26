@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -366,8 +367,33 @@ fun LoginScreenPreview() {
 
 @Preview(showBackground = true)
 @Composable
+fun HomeScreen(onClickLogout: () -> Unit = {}) {
+    val auth = Firebase.auth
+    val user = auth.currentUser
 
-fun HomeScreen(){
-    Text("HOME SCREEN", modifier = Modifier.fillMaxSize(), fontSize = 50.sp)
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("HOME SCREEN", fontSize = 50.sp)
+
+        if (user != null) {
+            Text(user.email.toString())
+        } else {
+            Text("No hay usuario")
+        }
+
+        Button(
+            onClick = {
+                auth.signOut()
+                onClickLogout()
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFF8A65)
+            )
+        ) {
+            Text("Cerrar Sesion")
+        }
+    }
 }
-
