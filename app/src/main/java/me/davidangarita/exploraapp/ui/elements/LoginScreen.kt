@@ -1,9 +1,10 @@
-package me.davidangarita.exploraapp
+package me.davidangarita.exploraapp.ui.elements
 
 import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,6 +35,8 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.auth
 import me.davidangarita.exploraapp.ui.theme.ExploraAppTheme
+import me.davidangarita.exploraapp.validateEmail
+import me.davidangarita.exploraapp.validatePassword
 
 
 @Composable
@@ -210,7 +213,7 @@ fun LoginScreen(
 
                     singleLine = true,
 
-                            supportingText = {
+                    supportingText = {
                         if(passwordError.isNotEmpty()){
                             Text(
                                 text = passwordError,
@@ -341,7 +344,7 @@ fun LoginScreen(
 }
 
 @Composable
-fun SocialButton(text: String, modifier: Modifier = Modifier, icon: androidx.compose.ui.graphics.vector.ImageVector) {
+fun SocialButton(text: String, modifier: Modifier = Modifier, icon: ImageVector) {
     OutlinedButton(
         onClick = { /* Handle social login */ },
         modifier = modifier.height(50.dp),
@@ -363,11 +366,3 @@ fun LoginScreenPreview() {
         LoginScreen(onLoginSuccess = {}, onNavigateToRegister = {})
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-
-fun HomeScreen(){
-    Text("HOME SCREEN", modifier = Modifier.fillMaxSize(), fontSize = 50.sp)
-}
-

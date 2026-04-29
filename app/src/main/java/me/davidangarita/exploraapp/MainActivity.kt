@@ -5,16 +5,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import me.davidangarita.exploraapp.ui.theme.ExploraAppTheme
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import me.davidangarita.exploraapp.ui.elements.AddTouristicPlaceScreen
+import me.davidangarita.exploraapp.ui.elements.HomeScreen
+import me.davidangarita.exploraapp.ui.elements.LoginScreen
+import me.davidangarita.exploraapp.ui.elements.RegisterScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,33 +23,56 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val myNavController = rememberNavController()
+            var myStartDestination: String = "login"
+            val auth = Firebase.auth
+            val currentUser = auth.currentUser
+
+            if(currentUser != null){
+                myStartDestination = "home"
+
+            }else{
+                myStartDestination = "login"
+            }
 
             NavHost(
                 navController = myNavController,
-                startDestination = "Login",
+                startDestination = myStartDestination,
                 modifier = Modifier.fillMaxSize()
             ) {
                 composable(route = "login") {
-                    LoginScreen(onLoginSuccess = {
-                        myNavController.navigate("home"){
-                            popUpTo("login"){inclusive = true}
-                        }},
+                    LoginScreen(
+                        onLoginSuccess = {
+                            myNavController.navigate("home") {
+                                popUpTo("login") { inclusive = true }
+                            }
+                        },
                         onNavigateToRegister = {
-                        myNavController.navigate(route = "register")
-                    }
+                            myNavController.navigate(route = "register")
+                        }
 
                     )
                 }
                 composable(route = "register") {
-                    RegisterScreen(onRegisterSuccess = {}, onNavigateToLogin = {}, onBackClick = {
+                    RegisterScreen(onRegisterSuccess = {
+                        myNavController.navigate("home") {
+                            popUpTo(0)
+                        }
+                    }, onNavigateToLogin = {}, onBackClick = {
                         myNavController.popBackStack()
                     }
                     )
                 }
 
                 composable(route = "home"){
-                    HomeScreen()
+                    HomeScreen(onClickAddTouristicPlace = {
+                        myNavController.navigate("add_touristic_place")
+                    })
                 }
+
+                composable(route="add_touristic_place"){
+                    AddTouristicPlaceScreen()
+                }
+
 
 
 
